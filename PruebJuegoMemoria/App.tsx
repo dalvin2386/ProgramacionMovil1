@@ -1,17 +1,34 @@
+import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
+import { JuegoProvider } from "./providers/JuegoProvider";
 import IniciarJuego from "./components/BotonInicio";
-import VistaCartas from "./page/VistaCartas";
 
-export default function App() {
+function PantallaInicio({ onIniciar }: { onIniciar: () => void }) {
   return (
     <View style={styles.container}>
-      <Text>Juego de Memoria</Text>
+      <Text style={styles.titulo}>Juego de Memoria</Text>
+      <IniciarJuego onPress={onIniciar} />
       <StatusBar style="auto" />
-   
-        <IniciarJuego />
-  
     </View>
+  );
+}
+
+export default function App() {
+  const [mostrarCartas, setMostrarCartas] = useState(false);
+
+  if (mostrarCartas) {
+    return (
+      <JuegoProvider>
+        <VistaCartas onVolver={() => setMostrarCartas(false)} />
+      </JuegoProvider>
+    );
+  }
+
+  return (
+    <JuegoProvider>
+      <PantallaInicio onIniciar={() => setMostrarCartas(true)} />
+    </JuegoProvider>
   );
 }
 
@@ -21,5 +38,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  titulo: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 20,
   },
 });
